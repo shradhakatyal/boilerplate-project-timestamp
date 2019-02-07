@@ -33,16 +33,14 @@ app.get("/api/timestamp/:date_string", function (req, res) {
   let dateString = req.params.date_string;
   let date;
   console.log(dateString);
-  // if(!dateString || dateString === "") {
-  //   date = new Date();
-  //   let responseObj = {
-  //     "unix": date.getTime(),
-  //     "utc": date.toUTCString()
-  //   }
-  //   res.send(responseObj);
-  // }
-
-if(dateString.indexOf("-") == -1) {
+  if(!dateString) {
+    date = new Date();
+    let responseObj = {
+      "unix": date.getTime(),
+      "utc": date.toUTCString()
+    }
+    res.send(responseObj);
+  } else if(dateString.indexOf("-") == -1) {
     dateString = Number(dateString);
     date = new Date(dateString);
     let responseObj = {
@@ -50,9 +48,7 @@ if(dateString.indexOf("-") == -1) {
       "utc": date.toUTCString()
     }
     res.send(responseObj);
-  }
-
-  if (isNaN(Date.parse(dateString)) == false) {
+  }else if (isNaN(Date.parse(dateString)) == false) {
     date = new Date(dateString);
     let responseObj = {
       "unix": date.getTime(),
@@ -61,11 +57,13 @@ if(dateString.indexOf("-") == -1) {
     res.send(responseObj);
   } else {
     res.json({
-      "status": "error",
-      "message": "Invalid date string"
+      "error": "Invalid Date"
     })
   }
 
+});
+app.get("*", function(req, res) {
+  res.send("Page not found");
 });
 
 
